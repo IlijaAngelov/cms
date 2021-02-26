@@ -34,7 +34,7 @@
             echo "<tr>";
             echo "<td>$user_id</td>";
             echo "<td>$username</td>";
-            echo "<td>$password</td>";
+            echo "<td>***</td>";
             echo "<td>$firstName</td>";
             echo "<td>$lastName</td>";
 

@@ -10,21 +10,23 @@
             </button>
             <a class="navbar-brand" href="index.php">CMS</a>
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-<!--                --><?php
-//                $sql = "SELECT * FROM categories";
-//                $query = mysqli_query($conn, $sql);
-//
-//                while($row = mysqli_fetch_assoc($query)){
-//                    $cat_title = $row['cat_title'];
-//                    echo "<li><a href='#'>$cat_title</a></li>";
-//                }
-//                ?>
-                <li><a href="admin">Admin</a></li>
-                <li><a class="navbar-brand" href="includes/login.php">Login</a></li>
+                <?php if(isset($_SESSION['username'])) {
+                    echo "<li><a class='navbar-brand' href='includes/inc.logout.php'>Logout</a></li>";
+                } else {
+                    echo "<li><a class='navbar-brand' href='includes/inc.login.php'>Login</a></li>";
+                }
+                ?>
+
                 <li><a class="navbar-brand" href="signup.php">Sign Up</a></li>
+                <?php
+                if(isset($_SESSION['user_role'])) {
+                    if ($_SESSION['user_role'] === 'admin') {
+                        echo "<li><a href='admin/index.php'>Go to Admin</a></li>";
+                    }
+                }
+                ?>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

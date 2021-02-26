@@ -1,26 +1,28 @@
 <?php include "includes/header.php"; ?>
 <?php include "includes/db.php"; ?>
 <?php include "includes/navigation.php"; ?>
-
+<?php session_start(); ?>
 <?php
-if(isset($_GET['mismatchPassword'])){
-    echo "Your password and repeat password field doesnt match! ";
+if(isset($_GET["error"])){
+    if($_GET['error'] == "emptyFields"){
+        echo "<p style='text-align:center;'>Please Fill all fields!</p>";
+    } else if ($_GET['error'] == 'invalidUsername'){
+        echo "<p style='text-align:center;'>Choose proper username!</p>";
+    } else if ($_GET['error'] == 'mismatchPasswords'){
+        echo "<p style='text-align:center;'>Your password and repeat password field doesnt match!</p>";
+    } else if ($_GET['error'] == 'emailExists'){
+        echo "<p style='text-align:center;'>User with that email already registered!</p>";
+    } else if ($_GET['error'] == 'usernameExists'){
+        echo "<p style='text-align:center;'>User with that username already registered. Please choose another.</p>";
+    } else if ($_GET['error'] == 'stmtfailed') {
+        echo "<p style='text-align:center;'>Something went wrong. Please try again.</p>";
+    } else {
+        echo "<p style='text-align:center;'>Sign-up is successful!</p>";
+        echo "<p style='text-align:center;'><a href=''>Click here to login</a></p>";
+    }
 }
-
-if(isset($_GET['emailExists'])) {
-    echo "An account with that email is already registered! ";
-    echo "If you thats you and you've forgotten your password click here!";
-}
-
-if(isset($_GET['usernameExists'])){
-    echo "That username already exists in Database. Please choose another one!";
-}
-
-if(isset($_GET['emptyFields'])){
-    echo "Please fill all the required fields!";
-}
-
 ?>
+
 <div class="container">
     <div class="row">
         <div class="col-xs-4 col-xs-offset-4">
@@ -52,14 +54,17 @@ if(isset($_GET['emptyFields'])){
                         <input type="password" name="repeat_password" id="repeat_password" class="form-control" placeholder="Repeat Password">
                     </div>
 
-                    <button type="submit" name="submit">Sign Up</button>
+                    <button style="btn btn-dark" type="submit" name="submit" >Sign Up</button>
 
-                    <input type="submit" class="btn btn-default" value="Register">
+<!--                    <input type="submit" class="btn btn-default" value="Register">-->
 
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <?php //include "includes/footer.php"; ?>

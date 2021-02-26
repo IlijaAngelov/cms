@@ -3,13 +3,15 @@
     <!--    Login   -->
     <div class="well">
         <h4>Login</h4>
-        <form action="includes/login.php " method="post">
+<!--        <form action="includes/login.php " method="post">-->
+        <form action="includes/inc.login.php" method="post">
             <div class="form-group">
                 <input name="username" type="text" class="form-control" placeholder="Enter Username">
             </div>
             <div class="input-group">
                 <input name="password" type="password" class="form-control" placeholder="Enter Password">
-                <span class="input-group-btn"><button class="btn btn-primary" type="submit" name="login">Log In</button></span>
+<!--                <span class="input-group-btn"><button class="btn btn-primary" type="submit" name="login">Log In</button></span>-->
+                <span class="input-group-btn"><button class="btn btn-primary" type="submit" name="submit">Log In</button></span>
             </div>
 
         </form>
