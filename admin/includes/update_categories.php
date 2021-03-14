@@ -5,11 +5,18 @@
         <?php
         if(isset($_GET['edit'])) {
             $the_cat_id = $_GET['edit'];
-//            echo $cat_id;
-            $sql = "SELECT * FROM categories WHERE cat_id = $cat_id";
-            $select_query = mysqli_query($conn, $sql);
 
-            while($data = mysqli_fetch_assoc($select_query)) {
+            $sql = "SELECT * FROM categories WHERE cat_id = ? ";
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+            } else {
+                mysqli_stmt_bind_param($stmt, 's', $cat_id);
+                mysqli_stmt_execute($stmt);
+            }
+
+            $resultData = mysqli_stmt_get_result($stmt);
+            while($data = mysqli_fetch_assoc($resultData)) {
                 $cat_id = $data['cat_id'];
                 $cat_title = $data['cat_title'];
                 ?>
@@ -20,23 +27,17 @@
 
         <?php
 
-        // UPDATE QUERY
         if(isset($_POST['update_category'])) {
             $the_cat_title = $_POST['cat_title'];
-            $sql1 = "UPDATE categories SET cat_title = '$the_cat_title' WHERE cat_id = $the_cat_id";
-            $update_query = mysqli_query($conn, $sql1);
-            if(!$update_query) {
-                die("Query Failed!" . mysqli_error($conn));
+            $sql = "UPDATE categories SET cat_title = ? WHERE cat_id = ? ";
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
             } else {
-                // try to make notifications!
-                echo "Category with ID " . $the_cat_id . " is updated!";
-                ?>
-                    <script>
-                        document.getElementById('edit').value = '';
-                        document.getElementById('edit_form').style.display = "none";
-                    </script>
-        <?php
+                mysqli_stmt_bind_param($stmt, 'ss', $the_cat_title, $the_cat_id);
+                mysqli_stmt_execute($stmt);
             }
+            echo '<p class="alert alert-success" role="alert">Category Updated</p>';
         }
 
         ?>

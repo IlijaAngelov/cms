@@ -18,9 +18,15 @@
     <tr>
         <?php
 
-        $sql = "SELECT * FROM `users` ";
-        $query = mysqli_query($conn, $sql);
-        while($data = mysqli_fetch_assoc($query)){
+        $users_sql = "SELECT * FROM users ";
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $users_sql)){
+            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+        } else {
+            mysqli_stmt_execute($stmt);
+        }
+        $usersData = mysqli_stmt_get_result($stmt);
+        while($data = mysqli_fetch_assoc($usersData)){
             $user_id = $data['user_id'];
             $username = $data['username'];
             $password = $data['password'];
@@ -37,18 +43,8 @@
             echo "<td>***</td>";
             echo "<td>$firstName</td>";
             echo "<td>$lastName</td>";
-
-
-//            $select_sql = "SELECT * FROM categories WHERE cat_id = $category_id";
-//            $select_query = mysqli_query($conn, $select_sql);
-//            while($row = mysqli_fetch_assoc($select_query)){
-//                $id = $row['cat_id'];
-//                $title = $row['cat_title'];
-//            }
-
             echo "<td>$user_email</td>";
             echo"<td><img class='img-responsive' src='../images/$user_image' alt='something' width='50px' height='50px'></td>";
-//            echo "<td>$user_image</td>";
             echo "<td>$user_role</td>";
             echo "<td>$created_on</td>";
             echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
@@ -66,24 +62,13 @@
 
 if(isset($_GET['delete'])){
     $user_id = $_GET['delete'];
-    $delete_sql = "DELETE FROM users WHERE user_id = $user_id";
-    $delete_query = mysqli_query($conn, $delete_sql);
+    $deleteUser = "DELETE FROM users WHERE user_id = ? ";
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $deleteUser)){
+        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+    } else {
+        mysqli_stmt_bind_param($stmt, 's', $user_id);
+        mysqli_stmt_execute($stmt);
+    }
     header("Location: users.php");
-}
-
-
-if(isset($_GET['unapprove'])){
-    $c_id = $_GET['unapprove'];
-    $unapprove_sql = "UPDATE comments SET comment_status = 'unapproved' WHERE comment_id = $c_id";
-    $unapprove_query = mysqli_query($conn, $unapprove_sql);
-    header("Location: comments.php");
-//    okQuery($unapprove_query);
-}
-
-if(isset($_GET['approve'])){
-    $c_id = $_GET['approve'];
-    $approve_sql = "UPDATE comments SET comment_status = 'approved' WHERE comment_id = $c_id";
-    $approve_query = mysqli_query($conn, $approve_sql);
-    header("Location: comments.php");
-//    okQuery($unapprove_query);
 }

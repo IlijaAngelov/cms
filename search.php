@@ -18,17 +18,22 @@
                 if(isset($_POST['submit'])) {
                     $search = $_POST['search'];
 
-                    $sql = "SELECT * FROM posts WHERE post_tags LIKE '%$search%' ";
-                    $search_query = mysqli_query($conn, $sql);
-                    if(!$search_query){
-                        die("Query Failed!" . mysqli_error($conn));
+                    $var = "%" . $search . "%";
+                    $sql = "SELECT * FROM posts WHERE post_tags LIKE ? ";
+                    $stmt = mysqli_stmt_init($conn);
+                    if(!mysqli_stmt_prepare($stmt, $sql)){
+                        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                    } else {
+                        mysqli_stmt_bind_param($stmt, 's', $var);
+                        mysqli_stmt_execute($stmt);
                     }
-                    $count = mysqli_num_rows($search_query);
+                    $searchData = mysqli_stmt_get_result($stmt);
+                    $count = mysqli_num_rows($searchData);
                     if($count == 0){
                         echo "<h1> NO RESULT</h1>";
                     } else {
 
-                        while($row = mysqli_fetch_assoc($search_query)){
+                        while($row = mysqli_fetch_assoc($searchData)){
                             $post_title = $row['post_title'];
                             $post_author = $row['post_author'];
                             $post_date = $row['post_date'];

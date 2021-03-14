@@ -1,23 +1,48 @@
 <?php
 
+if(isset($_GET['error'])){
+    if($_GET['error'] == 'extensionError'){
+        echo "<p style='text-align: center'>Error uploading the image. Only '.jpeg', '.jpg' and '.png' image extensions are supported</p>";
+    } else if($_GET['error'] == 'sizeError'){
+        echo "<p style='text-align: center'>Error uploading the image. Only sizes below 2MB!</p>";
+    } else if($_GET['error'] == 'stmtFailed'){
+        echo "<p style='text-align: center'>Error occurred! Try creating a new post.</p>";
+    } else if($_GET['error'] == 'none'){
+        echo "<p style='text-align: center'>Post created successfully!</p>";
+    }
+}
+
 if(isset($_POST['create_post'])){
     $title = $_POST['title'];
     $category_id = $_POST['category_id'];
     $author = $_POST['author'];
     $status = $_POST['status'];
+
+    // image details
     $image = $_FILES['image']['name'];
-    $image_temp = $_FILES['image']['tmp_name'];
+    $temp_image_name = $_FILES['image']['tmp_name'];
+    $img_size = $_FILES['image']['size'];
+
     $tags = $_POST['tags'];
     $content = $_POST['content'];
     $date = date('d-m-y');
 
-    move_uploaded_file($image_temp, "../images/$image");
+    $image_extension = explode('.', $image);
+    $extension = strtolower(array_pop($image_extension));
+    $valid_extensions = array('jpg', 'jpeg', 'png');
 
-    $insert_sql = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status, post_comment_count) ";
-    $insert_sql.= " VALUES ('$category_id', '$title', '$author', now(), '$image', '$content', '$tags', '$status', '0') ";
-    $query = mysqli_query($conn, $insert_sql);
+    if(!in_array($extension, $valid_extensions)) {
+        header('Location: posts.php?source=add_post&error=extensionError');
+        exit();
+    }
+    if($_FILES['image']['size'] > 2000000) {
+        header('Location: posts.php?source=add_post&error=sizeError');
+        exit();
+    }
 
-    okQuery($query);
+    move_uploaded_file($temp_image_name, "../images/$image");
+
+    createPost($category_id, $title, $author, $image, $content, $tags, $status, $post_comment_count = 0);
 
 }
 
@@ -30,21 +55,21 @@ if(isset($_POST['create_post'])){
         <input class="form-control" type="text" name="title">
     </div>
     <div class="form-group">
-<!--        <label for="category_id">Post Category Id</label>-->
-<!--        <input class="form-control" type="text" name="category_id">-->
         <select name="category_id" id="category">
             <?php
-
-            $sql = "SELECT * FROM categories ";
-            $select_query = mysqli_query($conn, $sql);
-            okQuery($select_query);
-            while($data = mysqli_fetch_assoc($select_query)) {
-                $cat_id = $data['cat_id'];
-                $cat_title = $data['cat_title'];
-                echo "<option value=$cat_id>$cat_title</option>";
-            }
-
-
+                $sql = "SELECT * FROM categories ";
+                $stmt = mysqli_stmt_init($conn);
+                if(!mysqli_stmt_prepare($stmt, $sql)){
+                    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                } else {
+                    mysqli_stmt_execute($stmt);
+                }
+                $resultData = mysqli_stmt_get_result($stmt);
+                while($data = mysqli_fetch_assoc($resultData)) {
+                    $cat_id = $data['cat_id'];
+                    $cat_title = $data['cat_title'];
+                    echo "<option value=$cat_id>$cat_title</option>";
+                }
             ?>
         </select>
     </div>
@@ -52,10 +77,6 @@ if(isset($_POST['create_post'])){
         <label for="author">Post Author</label>
         <input class="form-control" type="text" name="author">
     </div>
-<!--    <div class="form-group">-->
-<!--        <label for="status">Post Status</label>-->
-<!--        <input class="form-control" type="text" name="status">-->
-<!--    </div>-->
     <div class="form-group">
         <select name="status" id="status">
             <option value="published">Published</option>

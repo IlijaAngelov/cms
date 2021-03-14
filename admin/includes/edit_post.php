@@ -4,9 +4,17 @@ if(isset($_GET['p_id'])){
     $id = $_GET['p_id'];
 }
 
-$sqlz = "SELECT * FROM posts WHERE post_id = $id";
-$query = mysqli_query($conn, $sqlz);
-while($data = mysqli_fetch_assoc($query)) {
+$sql = "SELECT * FROM posts WHERE post_id = ? ";
+$stmt = mysqli_stmt_init($conn);
+if(!mysqli_stmt_prepare($stmt, $sql)){
+    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+} else {
+    mysqli_stmt_bind_param($stmt, 's', $id);
+    mysqli_stmt_execute($stmt);
+}
+$resultData = mysqli_stmt_get_result($stmt);
+
+while($data = mysqli_fetch_assoc($resultData)) {
     $id = $data['post_id'];
     $category_id = $data['post_category_id'];
     $author = $data['post_author'];
@@ -33,22 +41,30 @@ if(isset($_POST['update_post'])){
 
     move_uploaded_file($image_temp, "../images/$image");
     if(empty($image)) {
-        $sql1 = "SELECT * FROM posts WHERE post_id = $id ";
-        $image_query = mysqli_query($conn, $sql1);
-        while ($row = mysqli_fetch_array($image_query)) {
+        $sql = "SELECT * FROM posts WHERE post_id = ? ";
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $sql)){
+            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+        } else {
+            mysqli_stmt_bind_param($stmt, 's', $id);
+            mysqli_stmt_execute($stmt);
+        }
+        $resultData = mysqli_stmt_get_result($stmt);
+
+        while ($row = mysqli_fetch_array($resultData)) {
             $image = $row['post_image'];
         }
     }
 
-    $sqls = "UPDATE posts SET post_category_id = '$category_id', post_title = '$title', ";
-    $sqls.= "post_author = '$author', post_date = now(), post_image = '$image', post_content = '$content', ";
-    $sqls.= "post_tags = '$tags', post_status = '$status' ";
-    $sqls.= "WHERE post_id = $id" ;
-
-    $query = mysqli_query($conn, $sqls);
-
-    okQuery($query);
-    echo "<p class='bg-success'>Post Updated <a href='../post.php?p_id=$id'>View Post</a> or <a href='posts.php'>Edit More Posts</a></p>";
+    $sql = "UPDATE posts SET post_category_id = ?, post_title = ?, post_author = ?, post_date = now(), post_image = ?, post_content = ?, post_tags = ?, post_status = ? WHERE post_id = ? ";
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $sql)){
+        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+    } else {
+        mysqli_stmt_bind_param($stmt, 'ssssssss', $category_id, $title, $author, $image, $content, $tags, $status, $id);
+        mysqli_stmt_execute($stmt);
+    }
+    echo "<p class='alert alert-success' role='alert'>Post Updated <a href='../post.php?p_id=$id' class='alert-link'>View Post</a> or <a href='posts.php' class='alert-link'>Edit More Posts</a></p>";
 }
 ?>
 
@@ -60,18 +76,25 @@ if(isset($_POST['update_post'])){
         <input class="form-control" type="text" name="title" value="<?php echo $title; ?>">
     </div>
     <div class="form-group">
+    <label for="category">Choose Category</label>
+    </br>
         <select name="category" id="category">
         <?php
 
-        $sql = "SELECT * FROM categories ";
-        $select_query = mysqli_query($conn, $sql);
-        okQuery($select_query);
-        while($data = mysqli_fetch_assoc($select_query)) {
-        $cat_id = $data['cat_id'];
-        $cat_title = $data['cat_title'];
-            echo "<option value=$cat_id>$cat_title</option>";
-        }
+            $sql = "SELECT * FROM categories ";
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+            } else {
+                mysqli_stmt_execute($stmt);
+            }
+            $resultData = mysqli_stmt_get_result($stmt);
 
+            while($data = mysqli_fetch_assoc($resultData)) {
+            $cat_id = $data['cat_id'];
+            $cat_title = $data['cat_title'];
+                echo "<option value=$cat_id>$cat_title</option>";
+            }
 
         ?>
         </select>
@@ -82,7 +105,9 @@ if(isset($_POST['update_post'])){
     </div>
 
     <div class="form-group">
-        <select name="status" id="">
+        <label for="status">Change Status</label>
+        </br>
+        <select name="status" id="status">
             <option value='<?=$status; ?>'><?=$status; ?></option>
             <?php
             if($status == 'published'){ ?>
@@ -95,8 +120,10 @@ if(isset($_POST['update_post'])){
     </div>
 
     <div class="form-group">
+        <label for="images">Pick an Image</label>
+        </br>
         <img width="100px" height="100px" src="../images/<?php echo $image; ?>" alt="">
-        <input type="file" name="image">
+        <input type="file" name="image" id="images">
     </div>
     <div class="form-group">
         <label for="tags">Post Tags</label>

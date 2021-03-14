@@ -32,9 +32,15 @@
                                 <div class="col-xs-9 text-right">
 
                                     <?php
-                                        $sql = "SELECT * FROM posts";
-                                        $query = mysqli_query($conn, $sql);
-                                        $post_count = mysqli_num_rows($query);
+                                        $postSql = "SELECT * FROM posts";
+                                        $stmt = mysqli_stmt_init($conn);
+                                        if(!mysqli_stmt_prepare($stmt, $postSql)){
+                                            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                                        } else {
+                                            mysqli_stmt_execute($stmt);
+                                        }
+                                        $postsData = mysqli_stmt_get_result($stmt);
+                                        $post_count = mysqli_num_rows($postsData);
                                     ?>
 
                                     <div class='huge'><?php echo $post_count;?></div>
@@ -60,9 +66,15 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <?php
-                                    $sql1 = "SELECT * FROM comments";
-                                    $comment_count_query = mysqli_query($conn, $sql1);
-                                    $comm_count = mysqli_num_rows($comment_count_query);
+                                        $commentSql = "SELECT * FROM comments";
+                                        $stmt = mysqli_stmt_init($conn);
+                                        if(!mysqli_stmt_prepare($stmt, $commentSql)){
+                                            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                                        } else {
+                                            mysqli_stmt_execute($stmt);
+                                        }
+                                        $commentsData = mysqli_stmt_get_result($stmt);
+                                        $comm_count = mysqli_num_rows($commentsData);
                                     ?>
                                     <div class='huge'><?php echo $comm_count;?></div>
                                     <div>Comments</div>
@@ -87,9 +99,15 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <?php
-                                    $sql2 = "SELECT * FROM users";
-                                    $get_users_query = mysqli_query($conn, $sql2);
-                                    $user_count = mysqli_num_rows($get_users_query);
+                                        $userSql = "SELECT * FROM users";
+                                        $stmt = mysqli_stmt_init($conn);
+                                        if(!mysqli_stmt_prepare($stmt, $userSql)){
+                                            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                                        } else {
+                                            mysqli_stmt_execute($stmt);
+                                        }
+                                        $userData = mysqli_stmt_get_result($stmt);
+                                        $user_count = mysqli_num_rows($userData);
                                     ?>
                                     <div class='huge'><?php echo $user_count; ?></div>
                                     <div> Users</div>
@@ -114,9 +132,15 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <?php
-                                    $sql3 = "SELECT * FROM categories";
-                                    $get_categories_query = mysqli_query($conn, $sql3);
-                                    $category_count = mysqli_num_rows($get_categories_query);
+                                        $categorySql = "SELECT * FROM categories";
+                                        $stmt = mysqli_stmt_init($conn);
+                                        if(!mysqli_stmt_prepare($stmt, $categorySql)){
+                                            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                                        } else {
+                                            mysqli_stmt_execute($stmt);
+                                        }
+                                        $categoryData = mysqli_stmt_get_result($stmt);
+                                        $category_count = mysqli_num_rows($categoryData);
                                     ?>
                                     <div class='huge'><?php echo $category_count;?></div>
                                     <div>Categories</div>

@@ -6,19 +6,37 @@ if(isset($_POST['checkBoxArray'])) {
 
         switch ($bulkOptions){
             case 'published':
-                $sql_publish = "UPDATE posts SET post_status = 'Published' WHERE post_id = $value";
-                $query = mysqli_query($conn, $sql_publish);
-                okQuery($query);
+                $publish_sql = "UPDATE posts SET post_status = 'Published' WHERE post_id = ? ";
+                $stmt = mysqli_stmt_init($conn);
+                if(!mysqli_stmt_prepare($stmt, $publish_sql)){
+                    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                } else {
+                    mysqli_stmt_bind_param($stmt, 's', $value);
+                    mysqli_stmt_execute($stmt);
+                }
+                echo "<p class='alert alert-success' role='alert'>Post(s) published</p>";
                 break;
             case 'draft':
-                $sql_draft = "UPDATE posts SET post_status = 'draft' WHERE post_id = $value";
-                $query = mysqli_query($conn, $sql_draft);
-                okQuery($query);
+                $draft_sql = "UPDATE posts SET post_status = 'draft' WHERE post_id = ? ";
+                $stmt = mysqli_stmt_init($conn);
+                if(!mysqli_stmt_prepare($stmt, $draft_sql)){
+                    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                } else {
+                    mysqli_stmt_bind_param($stmt, 's', $value);
+                    mysqli_stmt_execute($stmt);
+                }
+                echo "<p class='alert alert-success' role='alert'>Post(s) drafted.</p>";
                 break;
             case 'delete':
-                $sql_delete = "DELETE FROM posts WHERE post_id = $value";
-                $query = mysqli_query($conn, $sql_delete);
-                okQuery($query);
+                $delete_sql = "DELETE FROM posts WHERE post_id = ? ";
+                $stmt = mysqli_stmt_init($conn);
+                if(!mysqli_stmt_prepare($stmt, $delete_sql)){
+                    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                } else {
+                    mysqli_stmt_bind_param($stmt, 's', $value);
+                    mysqli_stmt_execute($stmt);
+                }
+                echo "<p class='alert alert-success' role='alert'>Post(s) deleted!</p>";
                 break;
 
         }
@@ -62,10 +80,15 @@ if(isset($_POST['checkBoxArray'])) {
     <tbody>
     <tr>
         <?php
-//        global $conn;
         $sql = "SELECT * FROM posts ORDER BY `post_id` ASC";
-        $query = mysqli_query($conn, $sql);
-        while($data = mysqli_fetch_assoc($query)){
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $sql)){
+            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+        } else {
+            mysqli_stmt_execute($stmt);
+        }
+        $postsData = mysqli_stmt_get_result($stmt);
+        while($data = mysqli_fetch_assoc($postsData)){
             $id = $data['post_id'];
             $category_id = $data['post_category_id'];
             $author = $data['post_author'];
@@ -83,9 +106,16 @@ if(isset($_POST['checkBoxArray'])) {
             echo"<td>$author</td>";
             echo"<td><a href='../post.php?p_id=$id'>$title</a></td>";
 
-            $select_sql = "SELECT * FROM categories WHERE cat_id = $category_id";
-            $select_query = mysqli_query($conn, $select_sql);
-            while($row = mysqli_fetch_assoc($select_query)){
+            $categories_sql = "SELECT * FROM categories WHERE cat_id = ? ";
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $categories_sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+            } else {
+                mysqli_stmt_bind_param($stmt, 's', $category_id);
+                mysqli_stmt_execute($stmt);
+            }
+            $categoriesData = mysqli_stmt_get_result($stmt);
+            while($row = mysqli_fetch_assoc($categoriesData)){
                 $c_id = $row['cat_id'];
                 $title = $row['cat_title'];
             }
@@ -95,11 +125,17 @@ if(isset($_POST['checkBoxArray'])) {
             echo"<td><img class='img-responsive' src='../images/$image' alt='something' width='100px' height='100px'></td>";
             echo"<td>$tags</td>";
 
-            $comment_number_sql = "SELECT * FROM comments WHERE comment_post_id = $id";
-//            echo "<td>$comment_number_sql</td>";
-            $comment_number_query = mysqli_query($conn, $comment_number_sql);
-            $rows = mysqli_num_rows($comment_number_query);
-//                echo $rows;
+            $comments_sql = "SELECT * FROM comments WHERE comment_post_id = ? ";
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $comments_sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+            } else {
+                mysqli_stmt_bind_param($stmt, 's', $id);
+                mysqli_stmt_execute($stmt);
+            }
+            $commentsData = mysqli_stmt_get_result($stmt);
+
+            $rows = mysqli_num_rows($commentsData);
 
             echo "<td>$rows</td>";
             echo"<td>$date</td>";
@@ -119,8 +155,17 @@ if(isset($_POST['checkBoxArray'])) {
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
 
-    $sql = "DELETE FROM posts WHERE post_id = $id";
-    $query = mysqli_query($conn, $sql);
+    $deletePosts = "DELETE FROM posts WHERE post_id = ? ";
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $deletePosts)){
+        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+    } else {
+        mysqli_stmt_bind_param($stmt, 's', $id);
+        mysqli_stmt_execute($stmt);
+    }
+
     header("Location: posts.php");
-    okQuery($query);
+//    okQuery($query);
+//    echo "<p class='alert alert-success' role='alert'>Post Deleted</p>";
+
 }

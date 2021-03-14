@@ -38,14 +38,21 @@
 
         <?php
             $sql = "SELECT * FROM categories";
-            $query = mysqli_query($conn, $sql);
+            $stmt = mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt, $sql)){
+                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+            } else {
+                mysqli_stmt_execute($stmt);
+            }
+            $categories = mysqli_stmt_get_result($stmt);
         ?>
+
         <h4>Blog Categories</h4>
         <div class="row">
             <div class="col-lg-12">
                 <ul class="list-unstyled">
                     <?php
-                        while($row = mysqli_fetch_assoc($query)){
+                        while($row = mysqli_fetch_assoc($categories)){
                             $cat_id = $row['cat_id'];
                             $cat_title = $row['cat_title'];
                             echo "<li><a href='category.php?category=$cat_id'>$cat_title</a></li>";

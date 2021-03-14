@@ -2,11 +2,17 @@
 <?php
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
+    $sql = "SELECT * FROM users WHERE username = ? ";
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $sql)){
+        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+    } else {
+        mysqli_stmt_bind_param($stmt, 's', $username);
+        mysqli_stmt_execute($stmt);
+    }
+    $userData = mysqli_stmt_get_result($stmt);
 
-    $sql = "SELECT * FROM users WHERE username = '$username'";
-    $query = mysqli_query($conn, $sql);
-
-    while($row = mysqli_fetch_array($query)){
+    while($row = mysqli_fetch_array($userData)){
         $user_id = $row['user_id'];
         $username = $row['username'];
         $password = $row['password'];
@@ -32,17 +38,33 @@ if(isset($_POST['edit_user'])){
 
     move_uploaded_file($image_temp, "../images/$image");
     if(empty($image)) {
-        $sql11 = "SELECT * FROM users WHERE user_id = '$user_id' ";
-        $image_query1 = mysqli_query($conn, $sql11);
-        while ($row = mysqli_fetch_array($image_query1)) {
+
+        $userSql = "SELECT * FROM users WHERE user_id = ? ";
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $userSql)){
+            echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+        } else {
+            mysqli_stmt_bind_param($stmt, 's', $user_id);
+            mysqli_stmt_execute($stmt);
+        }
+        $userImage = mysqli_stmt_get_result($stmt);
+
+        while ($row = mysqli_fetch_array($userImage)) {
             $image = $row['user_image'];
         }
     }
 
-    $update_sql = "UPDATE users SET username = '$username', password = '$password', ";
-    $update_sql.= "user_role = '$user_role', firstName = '$firstName', lastName = '$lastName', user_email = '$user_email', user_image = '$image' ";
-    $update_sql.= "WHERE user_id = '$user_id'" ;
-    $update_query = mysqli_query($conn, $update_sql);
+    $updateSql = "UPDATE users SET username = ?, password = ?, user_role = ?, firstName = ?, lastName = ?, user_email = ?, user_image = ? WHERE user_id = ? ";
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $updateSql)){
+        echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+    } else {
+        mysqli_stmt_bind_param($stmt, 'ssssssss', $username, $password, $user_role, $firstName, $lastName, $user_email, $image, $user_id);
+        mysqli_stmt_execute($stmt);
+    }
+    $updateUser = mysqli_stmt_get_result($stmt);
+//    echo "<p style='text-align: center'>User updated successfully!</p>";
+
 }
 
 ?>
@@ -87,14 +109,19 @@ if(isset($_POST['edit_user'])){
                     <label for="user_role">Roles:</label>
                     <select name="user_role" id="user_role">
                         <?php
-                        $sql = "SELECT DISTINCT user_role FROM users ";
-                        $select_query = mysqli_query($conn, $sql);
-//                        okQuery($select_query);
-                        while($data = mysqli_fetch_assoc($select_query)) {
-                            $u_id = $data['user_id'];
-                            $user_role = $data['user_role'];
-                            echo "<option value=$user_role>$user_role</option>";
-                        }
+                            $roleSql = "SELECT DISTINCT user_role FROM users ";
+                            $stmt = mysqli_stmt_init($conn);
+                            if(!mysqli_stmt_prepare($stmt, $roleSql)){
+                                echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                            } else {
+                                mysqli_stmt_execute($stmt);
+                            }
+                            $rolesData = mysqli_stmt_get_result($stmt);
+                            while($data = mysqli_fetch_assoc($rolesData)) {
+                                $u_id = $data['user_id'];
+                                $user_role = $data['user_role'];
+                                echo "<option value=$user_role>$user_role</option>";
+                            }
                         ?>
                     </select>
                 </div>

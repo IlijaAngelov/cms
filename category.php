@@ -18,9 +18,16 @@
                     $post_category_id = $_GET['category'];
                 }
 
-                $sql = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
-                $query = mysqli_query($conn, $sql);
-                while($row = mysqli_fetch_assoc($query)){
+                $sql = "SELECT * FROM posts WHERE post_category_id = ? ";
+                $stmt = mysqli_stmt_init($conn);
+                if(!mysqli_stmt_prepare($stmt, $sql)){
+                    echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
+                } else {
+                    mysqli_stmt_bind_param($stmt, 's', $post_category_id);
+                    mysqli_stmt_execute($stmt);
+                }
+                $postData = mysqli_stmt_get_result($stmt);
+                while($row = mysqli_fetch_assoc($postData)){
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];
                     $post_author = $row['post_author'];

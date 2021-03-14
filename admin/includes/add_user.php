@@ -59,26 +59,6 @@ if(isset($_POST['create_user'])){
     <div class="form-group">
         <input type="file" name="image">
     </div>
-
-
-
-<!--    TRY AND MAKE IT A DROPDOWN SELECTION MENU FOR ROLES!-->
-<!--    <div class="form-group">-->
-<!--        <select name="category_id" id="category">-->
-<!--            --><?php
-//
-//            $sql = "SELECT * FROM categories ";
-//            $select_query = mysqli_query($conn, $sql);
-//            okQuery($select_query);
-//            while($data = mysqli_fetch_assoc($select_query)) {
-//                $cat_id = $data['cat_id'];
-//                $cat_title = $data['cat_title'];
-//                echo "<option value=$cat_id>$cat_title</option>";
-//            }
-//            ?>
-<!--        </select>-->
-<!--    </div>-->
-
     <div class="form-group">
         <input class="btn btn-primary" type="submit" name="create_user" value="Create User">
     </div>

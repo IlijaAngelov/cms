@@ -23,11 +23,30 @@
                 <?php
                 if(isset($_SESSION['user_role'])) {
                     if ($_SESSION['user_role'] === 'admin') {
-                        echo "<li><a href='admin/index.php'>Go to Admin</a></li>";
+                        echo "<li><a class='navbar-brand' href='admin/index.php'>Go to Admin</a></li>";
                     }
                 }
                 ?>
             </ul>
+            <?php if(isset($_SESSION['username'])) { ?>
+            <ul class="nav navbar-right navbar-nav top-nav">
+                <li class="dropdown">
+                    <a href="#" style="text-transform:uppercase;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $_SESSION['username']; ?><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="includes/logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <?php } ?>
         </div>
         <!-- /.navbar-collapse -->
     </div>
