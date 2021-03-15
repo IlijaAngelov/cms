@@ -10,7 +10,7 @@
     <div class="row">
 
     <!-- Blog Entries Column -->
-    <div class="col-md-8">
+    <div class="col-md-12">
 
         <?php
         if(isset($_GET['p_id'])){
@@ -40,7 +40,7 @@
             ?>
             <h1 class="page-header">
                 <div>
-                Page Heading
+<!--                Page Heading-->
 <!--                <small>Secondary Text</small>-->
                 <a class="btn btn-primary" href="index.php"><span class="glyphicon glyphicon-chevron-left"></span> Go Back</a>
                     <?php
@@ -167,10 +167,7 @@
 
     </div>
 
-    <!-- Blog Sidebar Widgets Column -->
-    <?php include "includes/sidebar.php"; ?>
-    <!-- /.row -->
+<!--    --><?php //include "includes/sidebar.php"; ?>
 
     <hr>
-
 <?php include "includes/footer.php"; ?>
