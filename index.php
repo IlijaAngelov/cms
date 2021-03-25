@@ -32,24 +32,29 @@
                     $post_date = $row['post_date'];
                     $post_image = $row['post_image'];
                     $post_content = substr($row['post_content'], 0, 100);
+                    $post_tags = $row['post_tags'];
                 ?>
-                <h1>
-                    <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
-                </h1>
-                    <a href="post.php?p_id=<?=$post_id;?>">
-                        <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="">
-                    </a>
-                <p class="lead">
-                    by <a href="index.php"><?php echo $post_author; ?></a>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
-<!--                <hr>-->
-<!--                    -->
-<!--                <hr>-->
-                <p><?php echo $post_content; ?></p>
-                <a class="btn btn-primary" href="post.php?p_id=<?=$post_id;?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+<!--                <h1>-->
+<!--                    <a href="post.php?p_id=--><?php //echo $post_id; ?><!--">--><?php //echo $post_title; ?><!--</a>-->
+<!--                </h1>-->
+<!--                    <a href="post.php?p_id=--><?//=$post_id;?><!--">-->
+<!--                        <img class="img-responsive" src="images/--><?php //echo $post_image; ?><!--" alt="">-->
+<!--                    </a>-->
+<!--                <p class="lead">-->
+<!--                    by <a href="index.php">--><?php //echo $post_author; ?><!--</a>-->
+<!--                </p>-->
+<!--                <p><span class="glyphicon glyphicon-time"></span> --><?php //echo $post_date; ?><!--</p>-->
+<!--                <p>--><?php //echo $post_content; ?><!--</p>-->
+<!--                <a class="btn btn-primary" href="post.php?p_id=--><?//=$post_id;?><!--">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>-->
 
-                <hr>
+                    <article style="border: 0.5px solid #14312d; border-radius: 10px; padding: 5vh; margin: 30px 0; box-shadow: 10px 10px #14213d;">
+                        <h1 style="font-weight: bold;"><a style="color: black;" href="post.php?p_id=<?php echo $post_id;?>"><?php echo $post_title; ?></a></h1>
+                        <div style="border: 1px solid black; border-radius: 25px; display: inline-block; padding: 5px; color: #337ab7; border-color: #337ab7; text-transform: uppercase; font-weight: bold; cursor: pointer; "><?php echo $post_tags; ?></div>
+                        <p style="text-overflow: ellipsis; margin: 10px 0; font-size: 1.5em"><?php echo $post_content; ?></p>
+                        <a class="btn btn-primary" href="post.php?p_id=<?=$post_id;?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    </article>
+
+<!--                <hr>-->
 
                 <?php } ?>
 
@@ -58,7 +63,6 @@
             <!-- Blog Sidebar Widgets Column -->
             <?php include "includes/sidebar.php"; ?>
         <!-- /.row -->
-
-        <hr>
-
+        </div>
+    </div>
 <?php include "includes/footer.php"; ?>

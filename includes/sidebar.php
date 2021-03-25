@@ -1,4 +1,4 @@
-<div class="col-md-3">
+<div class="col-md-3" style="position: fixed; margin-left: 60vw;" >
     <div class="well">
         <h4>Login</h4>
         <form action="includes/inc.login.php" method="post">

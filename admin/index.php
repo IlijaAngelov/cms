@@ -1,6 +1,6 @@
 <?php include "includes/admin_header.php" ?>
 
-<div id="wrapper">
+<div id="wrapper" color;>
 
 <?php //if($conn) echo "enter!"; ?>
     <!-- Navigation -->

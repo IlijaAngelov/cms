@@ -73,7 +73,7 @@ if(isset($_POST['edit_user'])){
 
     <!-- Navigation -->
     <?php include "includes/admin_navigation.php" ?>
-    <div id="page-wrapper">
+    <div id="page-wrapper" style="height: 100vh">
 
         <div class="container-fluid">
 

@@ -19,6 +19,7 @@ body {
 
 #wrapper {
     padding-left: 0;
+    background-color: #14213d;
 }
 
 #page-wrapper {
@@ -230,4 +231,22 @@ ul.alert-dropdown {
 .col-xs-4-2 {
     width: auto;
 
+}
+
+/*nav/sidebar color*/
+
+.navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+
+.side-nav>li>ul>li>a {
+    color: white;
+}
+
+.navbar-inverse .navbar-brand {
+    color: white;
+}
+
+.top-nav>li>a {
+    color: white;
 }

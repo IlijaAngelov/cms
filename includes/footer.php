@@ -1,16 +1,11 @@
 <!-- Footer -->
-<footer>
-    <div class="row">
+<footer style="background-color: #e5e5e5; text-align: center; padding: 20px 0; margin: 25px 0 0 0">
+    <div class="row" style="margin: 0; padding: 0;">
         <div class="col-lg-12">
-            <p>Copyright &copy; Your Website <?php echo date('Y');?></p>
+            <p style="margin: 0px;">Copyright &copy; Ilija Angelov <?php echo date('Y');?></p>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
-    <!-- /.row -->
 </footer>
-
-</div>
-<!-- /.container -->
 
 <!-- jQuery -->
 <script src="js/jquery.js"></script>

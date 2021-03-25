@@ -6,7 +6,7 @@
     <!-- Navigation -->
 <?php include "includes/admin_navigation.php" ?>
 
-    <div id="page-wrapper">
+    <div id="page-wrapper" style="height: 90vh">
 
         <div class="container-fluid">
 

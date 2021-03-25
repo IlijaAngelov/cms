@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background-color: #14213d">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -30,7 +30,7 @@
     </ul>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav side-nav">
+        <ul class="nav navbar-nav side-nav" style="background-color: #14213d">
             <li>
                 <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
             </li>
@@ -48,7 +48,7 @@
             <li>
                 <a href="categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
             </li>
-            <li class="">
+            <li>
                 <a href="./comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
             </li>
             <li>

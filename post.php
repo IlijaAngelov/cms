@@ -7,17 +7,18 @@
     <!-- Page Content -->
     <div class="container">
 
-    <div class="row">
+    <div class="row" style="">
 
     <!-- Blog Entries Column -->
-    <div class="col-md-12">
+    <div class="col-md-8">
 
         <?php
         if(isset($_GET['p_id'])){
             $post_id = $_GET['p_id'];
         }
 
-        $selectPosts = "SELECT * FROM posts WHERE post_id = ? ";
+//        $selectPosts = "SELECT * FROM posts WHERE post_id = ? ";
+        $selectPosts = "SELECT post_title, post_author, post_image, post_content, DATE_FORMAT(post_date, '%M %d, %Y') as post_date, post_tags FROM posts WHERE post_id = ? ";
         $stmt = mysqli_stmt_init($conn);
         if(!mysqli_stmt_prepare($stmt, $selectPosts)){
             echo '<p class="alert alert-warning" role="alert">Connection Error</p>';
@@ -33,15 +34,18 @@
             $post_date = $row['post_date'];
             $post_image = $row['post_image'];
             $post_content = $row['post_content'];
-
+            $post_tags = $row['post_tags'];
+//            print_r($post_date);
+//            echo $post_date;
+//            $dt = strtotime($post_date);
+//            echo $dt;
+//            $post_date1 = date_format($dt, 'Y-m-d');
 //                    echo "$post_title";
 //                }
 
             ?>
-            <h1 class="page-header">
+            <h1 class="page-header" style="border-bottom: 0;">
                 <div>
-<!--                Page Heading-->
-<!--                <small>Secondary Text</small>-->
                 <a class="btn btn-primary" href="index.php"><span class="glyphicon glyphicon-chevron-left"></span> Go Back</a>
                     <?php
                     if(isset($_SESSION['user_role']) && ($_SESSION['user_role'] == 'admin')) {
@@ -52,16 +56,16 @@
                 </div>
             </h1>
 
-            <!-- First Blog Post -->
-            <h2>
-                <a href="#"><?php echo $post_title; ?></a>
-            </h2>
             <p class="lead">
-                by <a href="index.php"><?php echo $post_author; ?></a>
+                by <span style="text-decoration: underline; text-transform: capitalize;"><?php echo $post_author; ?></span> on <span><?php echo $post_date; ?></span>
             </p>
-            <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
-            <hr>
-            <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="">
+
+            <h1><?php echo $post_title; ?></h1>
+            <a style="border: 1px solid black; border-radius: 25px; display: inline-block; padding: 5px; margin: 3vh 0; color: #337ab7; border-color: #337ab7; text-transform: uppercase; font-weight: bold; cursor: pointer; "><?php echo $post_tags; ?></a>
+
+
+            <!--            <hr>-->
+            <img class="img-responsive" style="width: 50%; height: 300px; position: center; margin: auto" src="images/<?php echo $post_image; ?>" alt="">
             <hr>
             <p><?php echo $post_content; ?></p>
             <hr>
@@ -82,9 +86,6 @@
 //            $date = date('H:i:s d-m-y'); // change to hh:ii:ss d-m-y date style!!!
                 $date = date("Y-m-d H:i:s");
                 $draft = 'draft';
-//                $insert_sql = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) VALUES ('$id', '$author', '$email', '$comment', 'draft', '$date')";
-//                $query2 = mysqli_query($conn, $insert_sql);
-//                okQuery($query2);
 
                 $insertSql = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) VALUES ( ?,?,?,?,?,? ) ";
 
@@ -167,7 +168,8 @@
 
     </div>
 
-<!--    --><?php //include "includes/sidebar.php"; ?>
-
-    <hr>
+    <?php include "includes/sidebar.php"; ?>
+    </div>
+    </div>
+<!--    <hr>-->
 <?php include "includes/footer.php"; ?>
